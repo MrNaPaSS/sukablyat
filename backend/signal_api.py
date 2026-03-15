@@ -2243,6 +2243,66 @@ def send_telegram_notification_to_admin(request_data):
     except Exception as e:
         print(f'[ERROR] Ошибка отправки уведомления админу: {e}')
 
+def load_subscription_requests():
+    """Загрузка запросов на подписку из файла"""
+    try:
+        path = os.path.join(ROOT_DIR, 'subscription_requests.json')
+        if os.path.exists(path):
+            with open(path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+    except Exception as e:
+        print(f'[ERROR] Ошибка загрузки запросов подписки: {e}')
+    return {}
+
+def save_subscription_requests(requests):
+    """Сохранение запросов на подписку в файл"""
+    try:
+        path = os.path.join(ROOT_DIR, 'subscription_requests.json')
+        with open(path, 'w', encoding='utf-8') as f:
+            json.dump(requests, f, ensure_ascii=False, indent=4)
+    except Exception as e:
+        print(f'[ERROR] Ошибка сохранения запросов подписки: {e}')
+
+def send_telegram_notification_to_admin(request_data):
+    """Отправка уведомления администратору о новом запросе"""
+    try:
+        from config import BotConfig
+        bot_token = BotConfig.TELEGRAM_BOT_TOKEN
+        admin_id = BotConfig.ADMIN_TELEGRAM_ID
+        
+        user_id = request_data.get('user_id')
+        model_id = request_data.get('model_id')
+        sub_type = request_data.get('subscription_type')
+        method = request_data.get('payment_method')
+        price = request_data.get('price')
+        
+        user_data = request_data.get('user_data', {})
+        username = user_data.get('username', 'N/A')
+        full_name = f"{user_data.get('first_name', '')} {user_data.get('last_name', '')}".strip() or 'N/A'
+        
+        notification_text = f"""
+🔔 <b>НОВЫЙ ЗАПРОС НА ПОДПИСКУ</b>
+
+👤 Пользователь: {full_name} (@{username})
+🆔 ID: {user_id}
+🤖 Модель: {model_id}
+📅 Тип: {sub_type}
+💰 Цена: {price}
+💳 Метод: {method}
+
+Пожалуйста, проверьте админ-панель для одобрения.
+        """.strip()
+        
+        url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+        requests.post(url, json={
+            'chat_id': admin_id,
+            'text': notification_text,
+            'parse_mode': 'HTML'
+        }, timeout=10)
+        
+    except Exception as e:
+        print(f'[ERROR] Ошибка уведомления админа: {e}')
+
 @app.route('/api/subscription/create-stars-invoice', methods=['POST'])
 def create_stars_invoice():
     """Создание счета Telegram Stars для оплаты подписки"""
@@ -2251,18 +2311,18 @@ def create_stars_invoice():
         data = request.get_json()
         user_id = data.get('user_id')
         model_id = data.get('model_id')
-        subscription_type = data.get('subscription_type')  # 'monthly' или 'lifetime'
+        subscription_type = data.get('subscription_type')  # 'monthly' или 'yearly'
         
         if not all([user_id, model_id, subscription_type]):
             return jsonify({'success': False, 'error': 'Missing required parameters'}), 400
 
-        # Цены в звездах (Stars)
+        # Цены в звездах (Stars) - Курс 1:70 ($1 = 70 Stars)
         stars_prices = {
-            'shadow-stack': {'monthly': 1000, 'lifetime': 5000},
-            'forest-necromancer': {'monthly': 600, 'lifetime': 3500},
-            'gray-cardinal': {'monthly': 800, 'lifetime': 4500},
-            'logistic-spy': {'monthly': 400, 'lifetime': 2000},
-            'sniper-80x': {'monthly': 1500, 'lifetime': 10000}
+            'shadow-stack': {'monthly': 3430, 'yearly': 20930},
+            'forest-necromancer': {'monthly': 2030, 'yearly': 13930},
+            'gray-cardinal': {'monthly': 2730, 'yearly': 17430},
+            'logistic-spy': {'monthly': 1330, 'yearly': 6930},
+            'sniper-80x': {'monthly': 21000, 'yearly': 69930}
         }
         
         amount = stars_prices.get(model_id, {}).get(subscription_type)
@@ -2278,7 +2338,7 @@ def create_stars_invoice():
         }
         
         title = f"Подписка: {model_names.get(model_id, model_id)}"
-        description = f"{'Месячный доступ' if subscription_type == 'monthly' else 'Пожизненный доступ'} к сигналам модели {model_id}."
+        description = f"{'Месячный доступ' if subscription_type == 'monthly' else 'Годовой доступ'} к сигналам модели {model_id}."
         payload = f"stars_sub_{user_id}_{model_id}_{subscription_type}_{int(time.time())}"
         
         # Создаем инвойс через Telegram Bot API
@@ -2317,20 +2377,20 @@ def create_subscription_request():
         data = request.get_json()
         user_id = data.get('user_id')
         model_id = data.get('model_id')
-        subscription_type = data.get('subscription_type')  # 'monthly' или 'lifetime'
+        subscription_type = data.get('subscription_type')  # 'monthly' или 'yearly'
         payment_method = data.get('payment_method', 'manual') # 'stars', 'crypto', 'manual'
         user_data = data.get('user_data', {})
         
         if not all([user_id, model_id, subscription_type]):
             return jsonify({'success': False, 'error': 'Missing required parameters'}), 400
         
-        # Получаем цены модели
+        # Получаем цены модели (USD)
         model_prices = {
-            'shadow-stack': {'monthly': '$49/мес', 'lifetime': '$299 навсегда'},
-            'forest-necromancer': {'monthly': '$29/мес', 'lifetime': '$199 навсегда'},
-            'gray-cardinal': {'monthly': '$39/мес', 'lifetime': '$249 навсегда'},
-            'logistic-spy': {'monthly': '$19/мес', 'lifetime': '$99 навсегда'},
-            'sniper-80x': {'monthly': '$59/мес', 'lifetime': '$399 навсегда'}
+            'shadow-stack': {'monthly': '$49/мес', 'yearly': '$299/год'},
+            'forest-necromancer': {'monthly': '$29/мес', 'yearly': '$199/год'},
+            'gray-cardinal': {'monthly': '$39/мес', 'yearly': '$249/год'},
+            'logistic-spy': {'monthly': '$19/мес', 'yearly': '$99/год'},
+            'sniper-80x': {'monthly': '$300/мес', 'yearly': '$999/год'}
         }
         
         price = model_prices.get(model_id, {}).get(subscription_type, 'N/A')
