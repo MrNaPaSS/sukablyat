@@ -2190,37 +2190,11 @@ def generate_signal_analysis(prompt):
             f"🌐 КОНТЕКСТНЫЙ РАЗБОР {pair}: 1️⃣ Определите глобальный тренд и уровень волатильности {random_condition}. 2️⃣ Ждите **лучшей** точки входа, подтвержденной {random_key_metrics}, для {direction}. 3️⃣ Не торгуйте, если чувствуете **сомнение** или **страх**. 💡 Только **осознанные** решения приносят прибыль!",
             f"🧠 МЕНТАЛЬНЫЙ АНАЛИЗ {pair}: 1️⃣ Перед {direction} входом оцените свое **эмоциональное состояние**. 2️⃣ Убедитесь, что у вас есть {random_emotion} и вы готовы к {random_condition}. 3️⃣ Не торгуйте, если чувствуете **жадность, страх или гнев**. 🧘‍♂️ Психология - 80% успеха.",
             f"📋 ПРАВИЛО ТРЁХ ПОДТВЕРЖДЕНИЙ {pair}: 1️⃣ Для {direction} сигнала нужно найти **минимум три** подтверждения (например, {random_key_metrics}). 2️⃣ Определите **ключевой** уровень поддержки/сопротивления. 3️⃣ Ждите {random_time}, чтобы вход был **идеальным**. 💯 Не спеши! Жди свой сетап.",
-            f"🛡️ ФОКУС НА РИСК-МЕНЕДЖМЕНТЕ {pair}: 1️⃣ Определите **точный** размер лота для {direction} сделки (не более 1-2% риска). 2️⃣ **Обязательно** поставьте стоп-лосс **до** открытия позиции. 3️⃣ Цель: сохранить {random_emotion} и капитал в условиях {random_condition}. ⚖️ Защита превыше прибыли!",
+            f"🛡️ ФОКУС НА РИСК-МЕНЕДЖМЕНТЕ {pair}: 1️⃣ Определите **точный** размер лота для {direction} сделки (не более 1-2% риска). 2️⃣ **Обязательно** поставьте стоп-лосс **до** открытия позиции. 3️⃣ Цель: сохранение {random_emotion} и капитала в условиях {random_condition}. ⚖️ Защита превыше прибыли!",
             f"⏳ МУЛЬТИ-ТАЙМФРЕЙМ АНАЛИЗ {pair}: 1️⃣ Подтвердите {direction} направление на старшем таймфрейме ({random_analysis_style}). 2️⃣ Ищите точку входа на младшем таймфрейме {random_time}. 3️⃣ Избегайте входа во время {random_condition} без **четкого** тренда. 🕰️ Смотри на картину целиком.",
             f"🚪 ПЛАНИРОВАНИЕ ВЫХОДА {pair}: 1️⃣ Определите, где будет фиксироваться прибыль (Take Profit) для {direction}. 2️⃣ Продумайте, что будет, если цена пойдет против вас (Stop Loss). 3️⃣ **Не двигайте** стоп-лосс против движения и сохраняйте {random_emotion}. 🛑 Главное - выход! Не сиди в убытках."
         ]
         return random.choice(general_analyses)
-
-
-# =============================================================================
-# SUBSCRIPTION REQUEST MANAGEMENT
-# =============================================================================
-
-SUBSCRIPTION_REQUESTS_FILE = os.path.join(ROOT_DIR, 'subscription_requests.json')
-
-def load_subscription_requests():
-    """Загрузка запросов подписок"""
-    try:
-        if os.path.exists(SUBSCRIPTION_REQUESTS_FILE):
-            with open(SUBSCRIPTION_REQUESTS_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        return {}
-    except Exception as e:
-        print(f'[ERROR] Ошибка загрузки запросов подписок: {e}')
-        return {}
-
-def save_subscription_requests(data):
-    """Сохранение запросов подписок"""
-    try:
-        with open(SUBSCRIPTION_REQUESTS_FILE, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-    except Exception as e:
-        print(f'[ERROR] Ошибка сохранения запросов подписок: {e}')
 
 def send_telegram_notification_to_admin(request_data):
     """Отправка уведомления админу через Telegram Bot API"""
@@ -2644,111 +2618,6 @@ if __name__ == '__main__':
     #         pass  # Если уже настроено, пропускаем
     
     print('=' * 60)
-@app.route('/api/admin/subscription-requests', methods=['GET'])
-def get_subscription_requests():
-    """Получение всех запросов на подписку"""
-    try:
-        admin_id = request.args.get('admin_id')
-        if str(admin_id) != str(BotConfig.ADMIN_TELEGRAM_ID):
-            return jsonify({'success': False, 'error': 'Unauthorized'}), 401
-            
-        if os.path.exists(SUBSCRIPTION_REQUESTS_FILE):
-            with open(SUBSCRIPTION_REQUESTS_FILE, 'r', encoding='utf-8') as f:
-                requests_data = json.load(f)
-            return jsonify({'success': True, 'requests': requests_data})
-        return jsonify({'success': True, 'requests': []})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-@app.route('/api/admin/approve-subscription', methods=['POST'])
-def approve_subscription():
-    """Одобрение подписки"""
-    try:
-        data = request.get_json()
-        admin_id = data.get('admin_id')
-        user_id = str(data.get('user_id'))
-        model_id = data.get('model_id')
-        
-        if str(admin_id) != str(BotConfig.ADMIN_TELEGRAM_ID):
-            return jsonify({'success': False, 'error': 'Unauthorized'}), 401
-            
-        # Выдаем подписку через AuthService
-        success = auth_service.grant_subscription(user_id, model_id, admin_id)
-        
-        if success:
-            # Удаляем запрос из списка
-            if os.path.exists(SUBSCRIPTION_REQUESTS_FILE):
-                with open(SUBSCRIPTION_REQUESTS_FILE, 'r', encoding='utf-8') as f:
-                    reqs = json.load(f)
-                reqs = [r for r in reqs if not (str(r.get('user_id')) == user_id and r.get('model_id') == model_id)]
-                with open(SUBSCRIPTION_REQUESTS_FILE, 'w', encoding='utf-8') as f:
-                    json.dump(reqs, f, ensure_ascii=False, indent=2)
-            
-            return jsonify({'success': True})
-        return jsonify({'success': False, 'error': 'Failed to grant subscription'}), 500
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-@app.route('/api/admin/reject-subscription', methods=['POST'])
-def reject_subscription():
-    """Отклонение подписки"""
-    try:
-        data = request.get_json()
-        admin_id = data.get('admin_id')
-        user_id = str(data.get('user_id'))
-        model_id = data.get('model_id')
-        
-        if str(admin_id) != str(BotConfig.ADMIN_TELEGRAM_ID):
-            return jsonify({'success': False, 'error': 'Unauthorized'}), 401
-            
-        # Просто удаляем запрос
-        if os.path.exists(SUBSCRIPTION_REQUESTS_FILE):
-            with open(SUBSCRIPTION_REQUESTS_FILE, 'r', encoding='utf-8') as f:
-                reqs = json.load(f)
-            reqs = [r for r in reqs if not (str(r.get('user_id')) == user_id and r.get('model_id') == model_id)]
-            with open(SUBSCRIPTION_REQUESTS_FILE, 'w', encoding='utf-8') as f:
-                json.dump(reqs, f, ensure_ascii=False, indent=2)
-            
-        return jsonify({'success': True})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-@app.route('/api/subscription-request', methods=['POST'])
-def submit_subscription_request():
-    """Подача запроса на подписку (от пользователя)"""
-    try:
-        data = request.get_json()
-        user_id = data.get('user_id')
-        model_id = data.get('model_id')
-        sub_type = data.get('subscription_type')
-        user_info = data.get('user_data', {})
-        
-        request_entry = {
-            'user_id': user_id,
-            'model_id': model_id,
-            'subscription_type': sub_type,
-            'user_data': user_info,
-            'timestamp': datetime.now().isoformat(),
-            'status': 'pending'
-        }
-        
-        requests_data = []
-        if os.path.exists(SUBSCRIPTION_REQUESTS_FILE):
-            with open(SUBSCRIPTION_REQUESTS_FILE, 'r', encoding='utf-8') as f:
-                requests_data = json.load(f)
-        
-        # Проверяем нет ли уже такого запроса
-        for r in requests_data:
-            if str(r.get('user_id')) == str(user_id) and r.get('model_id') == model_id:
-                return jsonify({'success': True, 'message': 'Request already exists'})
-                
-        requests_data.append(request_entry)
-        with open(SUBSCRIPTION_REQUESTS_FILE, 'w', encoding='utf-8') as f:
-            json.dump(requests_data, f, ensure_ascii=False, indent=2)
-            
-        return jsonify({'success': True})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
 
 if __name__ == '__main__':
     print('=' * 60)

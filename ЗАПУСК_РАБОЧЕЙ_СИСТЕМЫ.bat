@@ -26,7 +26,7 @@ start "WebSocket Server" cmd /k "python backend/websocket_server.py"
 timeout /t 3 >nul
 
 echo [5/5] Запуск постоянного туннеля...
-start "Cloudflare Tunnel" cmd /k ".\cloudflared.exe tunnel --config config.yml run nomoneynohoney-tunnel"
+start "Cloudflare Tunnel" cmd /k ".\cloudflared.exe tunnel --config config.yml --credentials-file credentials.json run bedd1007-8e35-4ced-8091-bc186ce2a198"
 
 echo.
 echo ========================================
