@@ -1,0 +1,194 @@
+{
+  "authorized_users": [
+    511442168,
+    7139123076,
+    1062303111,
+    7105650669,
+    1939645381,
+    1492114622,
+    669399614,
+    5993769378,
+    6779913408,
+    5573915954,
+    925083497,
+    1300283572,
+    7877677735,
+    1139218448,
+    7884013426,
+    8091581816,
+    8036963884,
+    851323928,
+    611419865,
+    889260198,
+    860788285,
+    320328226,
+    425088363,
+    5148366891,
+    1364797698,
+    5910370325,
+    5155272634,
+    459783584,
+    1413830263,
+    6652272170,
+    2133768001,
+    6462946722,
+    1093953374,
+    5620098424,
+    5159974552,
+    8347716902,
+    8027761487
+  ],
+  "last_updated": "2026-01-10T15:25:14.630506",
+  "511442168": {
+    "telegram_id": "511442168",
+    "first_name": "Admin",
+    "last_name": "",
+    "username": "",
+    "language_code": "ru",
+    "is_premium": false,
+    "is_admin": true,
+    "last_login": "2025-01-26T00:00:00.000000",
+    "subscriptions": [],
+    "created_at": "2025-01-26T00:00:00.000000"
+  },
+  "860788285": {
+    "telegram_id": "860788285",
+    "first_name": "Евгений",
+    "last_name": "",
+    "username": "eqoulette",
+    "language_code": "ru",
+    "is_premium": false,
+    "is_admin": false,
+    "last_login": "2025-11-21T16:00:40.822169",
+    "subscriptions": [
+      "logistic-spy"
+    ],
+    "created_at": "2025-11-21T16:00:40.822169"
+  },
+  "1364797698": {
+    "telegram_id": "1364797698",
+    "first_name": "Danil",
+    "last_name": "",
+    "username": "Daniro36",
+    "language_code": "ru",
+    "is_premium": false,
+    "is_admin": false,
+    "last_login": "2025-12-03T11:35:49.563357",
+    "subscriptions": [
+      "logistic-spy"
+    ],
+    "created_at": "2025-12-03T11:35:49.563357"
+  },
+  "1413830263": {
+    "telegram_id": "1413830263",
+    "first_name": "Dimon",
+    "last_name": "",
+    "username": "",
+    "language_code": "ru",
+    "is_premium": false,
+    "is_admin": false,
+    "last_login": "2025-12-21T18:45:25.255849",
+    "subscriptions": [
+      "logistic-spy"
+    ],
+    "created_at": "2025-12-21T18:45:25.255849"
+  },
+  "6652272170": {
+    "telegram_id": "6652272170",
+    "first_name": "𝕬𝖒𝖔𝖗 𝕱𝖆𝖗𝖎",
+    "last_name": "",
+    "username": "",
+    "language_code": "ru",
+    "is_premium": false,
+    "is_admin": false,
+    "last_login": "2025-12-21T22:13:01.422395",
+    "subscriptions": [
+      "logistic-spy"
+    ],
+    "created_at": "2025-12-21T22:13:01.422395"
+  },
+  "2133768001": {
+    "telegram_id": "2133768001",
+    "first_name": "Anton",
+    "last_name": "",
+    "username": "AntonAK0",
+    "language_code": "ru",
+    "is_premium": false,
+    "is_admin": false,
+    "last_login": "2025-12-24T05:09:05.678237",
+    "subscriptions": [
+      "logistic-spy"
+    ],
+    "created_at": "2025-12-24T05:09:05.678237"
+  },
+  "1093953374": {
+    "telegram_id": "1093953374",
+    "first_name": "Богдан К",
+    "last_name": "",
+    "username": "pizzalover77",
+    "language_code": "ru",
+    "is_premium": false,
+    "is_admin": false,
+    "last_login": "2025-12-28T20:09:07.398384",
+    "subscriptions": [
+      "logistic-spy"
+    ],
+    "created_at": "2025-12-28T20:09:07.398384"
+  },
+  "5620098424": {
+    "telegram_id": "5620098424",
+    "first_name": "FX👎",
+    "last_name": "",
+    "username": "trent12345655",
+    "language_code": "ru",
+    "is_premium": false,
+    "is_admin": false,
+    "last_login": "2026-01-04T16:57:33.989842",
+    "subscriptions": [
+      "logistic-spy"
+    ],
+    "created_at": "2026-01-04T16:57:33.989842"
+  },
+  "5159974552": {
+    "telegram_id": "5159974552",
+    "first_name": "Pallermo",
+    "last_name": "19",
+    "username": "Pallermo19",
+    "language_code": "ru",
+    "is_premium": false,
+    "is_admin": false,
+    "last_login": "2026-01-05T11:59:54.041417",
+    "subscriptions": [
+      "logistic-spy"
+    ],
+    "created_at": "2026-01-05T11:59:54.041417"
+  },
+  "8347716902": {
+    "telegram_id": "8347716902",
+    "first_name": "Luka",
+    "last_name": "",
+    "username": "",
+    "language_code": "ru",
+    "is_premium": false,
+    "is_admin": false,
+    "last_login": "2026-01-06T22:36:47.994550",
+    "subscriptions": [
+      "logistic-spy"
+    ],
+    "created_at": "2026-01-06T22:36:47.994550"
+  },
+  "8027761487": {
+    "telegram_id": "8027761487",
+    "first_name": "Ваня",
+    "last_name": "",
+    "username": "IvanN80",
+    "language_code": "ru",
+    "is_premium": false,
+    "is_admin": false,
+    "last_login": "2026-01-10T15:25:14.630506",
+    "subscriptions": [
+      "logistic-spy"
+    ],
+    "created_at": "2026-01-10T15:25:14.630506"
+  }
+}

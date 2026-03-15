@@ -1,0 +1,60 @@
+{
+  "active_signals": {
+    "8027761487": {
+      "signal_id": "otc_EUR_USD_(OTC)_1768633355",
+      "pair": "EUR/USD (OTC)",
+      "direction": "BUY",
+      "confidence": 0.7565399999999998,
+      "entry_price": null,
+      "expiration": 2,
+      "start_time": 1768633357496,
+      "created_at": "2026-01-17T10:02:39.617862",
+      "status": "active"
+    },
+    "1939645381": {
+      "signal_id": "otc_EUR_USD_(OTC)_1768939836",
+      "pair": "EUR/USD (OTC)",
+      "direction": "BUY",
+      "confidence": 0.7505399999999999,
+      "entry_price": null,
+      "expiration": 2,
+      "start_time": 1768939837953,
+      "created_at": "2026-01-20T23:10:38.323389",
+      "status": "active"
+    },
+    "5155272634": {
+      "signal_id": "mock_GBP_USD (OTC)_1769139285869",
+      "pair": "GBP/USD (OTC)",
+      "direction": "SELL",
+      "confidence": 0.9413307735963092,
+      "entry_price": null,
+      "expiration": 2,
+      "start_time": 1769139297137,
+      "created_at": "2026-01-23T03:34:50.175937",
+      "status": "active"
+    },
+    "611419865": {
+      "signal_id": "otc_USD_CHF_(OTC)_1770860238",
+      "pair": "USD/CHF (OTC)",
+      "direction": "SELL",
+      "confidence": 0.7473599999999999,
+      "entry_price": null,
+      "expiration": 5,
+      "start_time": 1770860244786,
+      "created_at": "2026-02-12T04:37:24.963223",
+      "status": "active"
+    },
+    "6779913408": {
+      "signal_id": "otc_NZD_USD_(OTC)_1772414198",
+      "pair": "NZD/USD (OTC)",
+      "direction": "SELL",
+      "confidence": 0.7515,
+      "entry_price": null,
+      "expiration": 2,
+      "start_time": 1772414213355,
+      "created_at": "2026-03-02T04:16:53.766452",
+      "status": "active"
+    }
+  },
+  "last_updated": "2026-03-02T04:16:53.766452"
+}

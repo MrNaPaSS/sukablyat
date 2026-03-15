@@ -1,0 +1,91 @@
+{
+  "feedback": [
+    {
+      "signal_id": "bulk_otc_USD_CHF_1761255085",
+      "user_id": 511442168,
+      "pair": "USD/CHF (OTC)",
+      "direction": "SELL",
+      "confidence": 0.7607999999999998,
+      "entry_price": 1.185,
+      "expiration": 1,
+      "signal_type": "bulk_otc",
+      "timestamp": "2025-10-23T23:31:34.739677",
+      "feedback": "success",
+      "feedback_time": "2025-10-23T23:36:59.824249"
+    },
+    {
+      "user_id": "511442168",
+      "signal_id": "forex_EUR_USD_1761332712",
+      "signal_type": "forex",
+      "feedback": "success",
+      "timestamp": "2025-10-24T22:04:08.655848",
+      "pair": "EUR/USD",
+      "direction": "BUY",
+      "confidence": 78.11999999999999
+    },
+    {
+      "user_id": "511442168",
+      "signal_id": "mock_USD_CHF (OTC)_1761342607969",
+      "signal_type": "otc",
+      "feedback": "success",
+      "timestamp": "2025-10-25T00:02:58.600642",
+      "pair": "USD/CHF (OTC)",
+      "direction": "BUY",
+      "confidence": 0.8604604854700513
+    },
+    {
+      "user_id": "511442168",
+      "signal_id": "otc_NZD_USD_(OTC)_1761399645",
+      "signal_type": "otc",
+      "feedback": "success",
+      "timestamp": "2025-10-25T15:58:23.764217",
+      "pair": "NZD/USD (OTC)",
+      "direction": "SELL",
+      "confidence": 0.7447199999999998
+    },
+    {
+      "user_id": "511442168",
+      "signal_id": "otc_NZD_USD_(OTC)_1761440202",
+      "signal_type": "otc",
+      "feedback": "success",
+      "timestamp": "2025-10-26T02:06:58.958316",
+      "pair": "NZD/USD (OTC)",
+      "direction": "SELL",
+      "confidence": 0.768
+    },
+    {
+      "user_id": "511442168",
+      "signal_id": "mock_EUR_USD (OTC)_1761441530844",
+      "signal_type": "otc",
+      "feedback": "success",
+      "timestamp": "2025-10-26T02:46:18.487046",
+      "pair": "EUR/USD (OTC)",
+      "direction": "BUY",
+      "confidence": 0.9671564351549063
+    },
+    {
+      "user_id": "7613535490",
+      "signal_id": "otc_NZD_USD_(OTC)_1761443526",
+      "signal_type": "otc",
+      "feedback": "success",
+      "timestamp": "2025-10-26T02:55:02.782350",
+      "pair": "NZD/USD (OTC)",
+      "direction": "BUY",
+      "confidence": 0.7890749999999999
+    },
+    {
+      "signal_id": "otc_EUR_USD_1761444228",
+      "user_id": 511442168,
+      "pair": "EUR/USD (OTC)",
+      "direction": "BUY",
+      "confidence": 0.7902,
+      "entry_price": 1.185,
+      "expiration": 4,
+      "signal_type": "otc",
+      "timestamp": "2025-10-26T03:03:48.115085",
+      "feedback": "success",
+      "feedback_time": "2025-10-26T03:18:25.189866"
+    }
+  ],
+  "last_updated": "2025-10-26T03:18:25.189866"
+}
