@@ -2218,6 +2218,7 @@ def send_telegram_notification_to_admin(request_data):
 🧠 Модель: {model['name']} {model['emoji']}
 💰 Тип: {subscription_type}
 💵 Цена: {request_data['price']}
+💳 Метод: {request_data.get('payment_method', 'manual')}
 👤 Пользователь: {request_data['user_data'].get('first_name', '')} {request_data['user_data'].get('last_name', '')}
 🆔 ID: {request_data['user_id']}
 📱 Username: @{request_data['user_data'].get('username', 'не указан')}
@@ -2242,6 +2243,73 @@ def send_telegram_notification_to_admin(request_data):
     except Exception as e:
         print(f'[ERROR] Ошибка отправки уведомления админу: {e}')
 
+@app.route('/api/subscription/create-stars-invoice', methods=['POST'])
+def create_stars_invoice():
+    """Создание счета Telegram Stars для оплаты подписки"""
+    try:
+        from config import BotConfig
+        data = request.get_json()
+        user_id = data.get('user_id')
+        model_id = data.get('model_id')
+        subscription_type = data.get('subscription_type')  # 'monthly' или 'lifetime'
+        
+        if not all([user_id, model_id, subscription_type]):
+            return jsonify({'success': False, 'error': 'Missing required parameters'}), 400
+
+        # Цены в звездах (Stars)
+        stars_prices = {
+            'shadow-stack': {'monthly': 1000, 'lifetime': 5000},
+            'forest-necromancer': {'monthly': 600, 'lifetime': 3500},
+            'gray-cardinal': {'monthly': 800, 'lifetime': 4500},
+            'logistic-spy': {'monthly': 400, 'lifetime': 2000},
+            'sniper-80x': {'monthly': 1500, 'lifetime': 10000}
+        }
+        
+        amount = stars_prices.get(model_id, {}).get(subscription_type)
+        if not amount:
+            return jsonify({'success': False, 'error': 'Invalid model or subscription type'}), 400
+            
+        model_names = {
+            'shadow-stack': 'ТЕНЕВОЙ СТЕК (ML)',
+            'forest-necromancer': 'ЛЕСНОЙ НЕКРОМАНТ (ML)',
+            'gray-cardinal': 'СЕРЫЙ КАРДИНАЛ (ML)',
+            'logistic-spy': 'ЛОГИСТИЧЕСКИЙ ШПИОН (ML)',
+            'sniper-80x': 'СНАЙПЕР 80X (ML)'
+        }
+        
+        title = f"Подписка: {model_names.get(model_id, model_id)}"
+        description = f"{'Месячный доступ' if subscription_type == 'monthly' else 'Пожизненный доступ'} к сигналам модели {model_id}."
+        payload = f"stars_sub_{user_id}_{model_id}_{subscription_type}_{int(time.time())}"
+        
+        # Создаем инвойс через Telegram Bot API
+        url = f"https://api.telegram.org/bot{BotConfig.TELEGRAM_BOT_TOKEN}/createInvoiceLink"
+        invoice_data = {
+            "title": title,
+            "description": description,
+            "payload": payload,
+            "provider_token": "", # Пусто для Telegram Stars
+            "currency": "XTR",
+            "prices": [{"label": "Stars", "amount": amount}]
+        }
+        
+        resp = requests.post(url, json=invoice_data, timeout=10)
+        result = resp.json()
+        
+        if result.get("ok"):
+            return jsonify({
+                "success": True,
+                "invoice_link": result["result"]
+            })
+        else:
+            return jsonify({
+                "success": False, 
+                "error": f"Telegram API error: {result.get('description')}"
+            }), 500
+            
+    except Exception as e:
+        print(f'[ERROR] Ошибка создания Stars инвойса: {e}')
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 @app.route('/api/subscription-request', methods=['POST'])
 def create_subscription_request():
     """Создание запроса на подписку"""
@@ -2250,6 +2318,7 @@ def create_subscription_request():
         user_id = data.get('user_id')
         model_id = data.get('model_id')
         subscription_type = data.get('subscription_type')  # 'monthly' или 'lifetime'
+        payment_method = data.get('payment_method', 'manual') # 'stars', 'crypto', 'manual'
         user_data = data.get('user_data', {})
         
         if not all([user_id, model_id, subscription_type]):
@@ -2275,6 +2344,7 @@ def create_subscription_request():
             'user_id': str(user_id),
             'model_id': model_id,
             'subscription_type': subscription_type,
+            'payment_method': payment_method,
             'price': price,
             'status': 'pending',
             'created_at': datetime.now().isoformat(),
@@ -2289,7 +2359,7 @@ def create_subscription_request():
         # Отправляем уведомление админу
         send_telegram_notification_to_admin(request_data)
         
-        print(f'[SUBSCRIPTION-REQUEST] Создан запрос {request_id} для пользователя {user_id}')
+        print(f'[SUBSCRIPTION-REQUEST] Создан запрос {request_id} ({payment_method}) для пользователя {user_id}')
         
         return jsonify({
             'success': True,
